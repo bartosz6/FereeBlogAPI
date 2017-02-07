@@ -1,0 +1,8 @@
+{
+    "projects":[
+        "Domain",
+        "Web",
+        "Infrastructure",
+        "Application"
+    ]
+}
