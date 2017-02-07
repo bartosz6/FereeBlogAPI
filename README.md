@@ -1,11 +1,12 @@
-# .NET Core WebAPI CQRS + DDD skeleton
+# Feree blog API
 
 TBC
 
 ## DOD:
 
-*   Skeleton of .net core api ready to use in future projects
+*   .NET CORE + CQRS API for blog purposes
 
+Web/appsettings.json
 ```JSON
 {
   "ConnectionStrings": {
