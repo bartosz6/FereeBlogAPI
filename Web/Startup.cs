@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using WebApplication.Data;
 using Domain.User;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;

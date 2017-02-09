@@ -1,4 +1,3 @@
-using System;
 using Infrastructure.Interfaces;
 using Autofac;
 using System.Threading.Tasks;

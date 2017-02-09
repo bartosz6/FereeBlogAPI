@@ -41,4 +41,5 @@ namespace WebApplication.Controllers
 
             return newToken;
         }
+    }
 }
