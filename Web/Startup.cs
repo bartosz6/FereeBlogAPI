@@ -14,19 +14,14 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using System.Linq;
 using System.Reflection;
+using Web.Jwt;
 
 namespace WebApplication
 {
-    public class TokenAuthOptions
-    {
-        public string Audience { get; set; }
-        public string Issuer { get; set; }
-        public SigningCredentials SigningCredentials { get; set; }
-    }
     public class Startup
     {
         private SecurityKey _key;
-        private TokenAuthOptions _to;
+        private TokenAuthOptions _tokenAuthOptions;
 
         public Startup(IHostingEnvironment env)
         {
@@ -40,6 +35,16 @@ namespace WebApplication
                 // For more details on using the user secret store see https://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
+
+            _key = new StaticKeyGen().Key;
+            _tokenAuthOptions = new TokenAuthOptions()
+            {
+                Audience = "audience",
+                Issuer = "issurer",
+                SigningCredentials = new SigningCredentials (
+                        _key,
+                        SecurityAlgorithms.HmacSha256)
+            };
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -75,22 +80,9 @@ namespace WebApplication
 
         private void RegisterDI(ContainerBuilder containerBuilder)
         {
-            _key = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes("wololololodsowejroj324")
-            );
-
-            _to = new TokenAuthOptions()
-            {
-                Audience = "audience",
-                Issuer = "issurer",
-                SigningCredentials = new SigningCredentials (
-                        _key,
-                        SecurityAlgorithms.HmacSha256)
-            };
-
             //TokenAuthOptions
             containerBuilder
-                .RegisterInstance(_to)
+                .RegisterInstance(_tokenAuthOptions)
                 .As<TokenAuthOptions>()
                 .SingleInstance();
                 
@@ -138,10 +130,10 @@ namespace WebApplication
                 TokenValidationParameters = new TokenValidationParameters
                 {
                      ValidateIssuer = true,
-                     ValidIssuer = _to.Issuer,
+                     ValidIssuer = _tokenAuthOptions.Issuer,
 
                      ValidateAudience = true,
-                     ValidAudience = _to.Audience,
+                     ValidAudience = _tokenAuthOptions.Audience,
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = _key,
@@ -149,9 +141,7 @@ namespace WebApplication
                 }
             });
 
-            app.UseMvc(route => route.MapRoute(
-                name: "default",
-                template: "{controller=Home}/{action=Index}/{id?}"));
+            app.UseMvc();
 
             //Kill all dependencies
             appLifetime.ApplicationStopped.Register(() => _container.Dispose());
