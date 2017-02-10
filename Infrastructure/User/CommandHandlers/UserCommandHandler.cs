@@ -7,12 +7,31 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.User.CommandHandlers
 {
-    public class UserCommandHandler : ICommandHandler<LoginCommand>
+    public class UserCommandHandler : 
+        ICommandHandler<LoginCommand>,
+        ICommandHandler<RegisterUserCommand>
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserCommandHandler(SignInManager<ApplicationUser> signInManager) {
+        public UserCommandHandler(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager) {
             _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
+        public async Task Handle(RegisterUserCommand command)
+        {
+            var user = new ApplicationUser(
+                command.Login,
+                command.Email
+            );
+
+            user.EmailConfirmed = true;
+            var result = await _userManager.CreateAsync(user, command.Password);
+
+            if(!result.Succeeded)
+                throw new InvalidOperationException($"Failed to register user {command.Login}");
         }
 
         public async Task Handle(LoginCommand command)
@@ -21,7 +40,7 @@ namespace Infrastructure.User.CommandHandlers
                 .PasswordSignInAsync(command.Login, command.Password, true, false);
 
             if (!result.Succeeded)
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedAccessException($"Login error for user {command.Login}");
         }
     }
 }

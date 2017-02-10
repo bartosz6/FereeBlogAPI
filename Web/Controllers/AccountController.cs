@@ -10,7 +10,6 @@ using Web.Services;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private readonly ICommandDispatcher _commandDispatcher;
@@ -34,6 +33,20 @@ namespace WebApplication.Controllers
         public async Task<object> Login([FromBody] LoginViewModel model)
         {
             await _commandDispatcher.Dispatch(new LoginCommand(model.Email, model.Password));
+
+            var user = await _queryDispatcher.Dispatch<GetUserQuery, ApplicationUser>(new GetUserQuery(model.Email));
+
+            var newToken = _authService.GetTokenForUser(user);
+
+            return newToken;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("/api/register")]
+        public async Task<object> Register([FromBody] LoginViewModel model)
+        {
+            await _commandDispatcher.Dispatch(new RegisterUserCommand(model.Email, model.Password, model.Email));
 
             var user = await _queryDispatcher.Dispatch<GetUserQuery, ApplicationUser>(new GetUserQuery(model.Email));
 

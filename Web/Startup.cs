@@ -14,6 +14,9 @@ using Autofac.Extensions.DependencyInjection;
 using System.Linq;
 using System.Reflection;
 using Web.Jwt;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
+using Web.Services;
 
 namespace WebApplication
 {
@@ -66,7 +69,15 @@ namespace WebApplication
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc(options => {
+                options.Filters.Add(
+                    new AuthorizeFilter(
+                        (new AuthorizationPolicyBuilder())
+                        .RequireAuthenticatedUser()
+                        .Build()
+                    )
+                );
+            });
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -83,6 +94,11 @@ namespace WebApplication
             containerBuilder
                 .RegisterInstance(_tokenAuthOptions)
                 .As<TokenAuthOptions>()
+                .SingleInstance();
+
+            containerBuilder
+                .RegisterType<AuthService>()
+                .As<IAuthService>()
                 .SingleInstance();
                 
             var references = Assembly.GetEntryAssembly().GetReferencedAssemblies().ToList();
@@ -140,7 +156,9 @@ namespace WebApplication
                 }
             });
 
-            app.UseMvc();
+            app.UseMvc(options => {
+                
+            });
 
             //Kill all dependencies
             appLifetime.ApplicationStopped.Register(() => _container.Dispose());
