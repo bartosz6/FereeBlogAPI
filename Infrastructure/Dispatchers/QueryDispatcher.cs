@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Autofac;
+using Domain;
 using Infrastructure.Interfaces;
 
 namespace Infrastructure

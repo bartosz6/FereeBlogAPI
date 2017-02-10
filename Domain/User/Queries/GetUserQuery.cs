@@ -1,7 +1,5 @@
-using Domain.User;
-using Infrastructure.Interfaces;
 
-namespace Infrastructure.User.Queries
+namespace Domain.User.Queries
 {
     public class GetUserQuery : IQuery<ApplicationUser>
     {

@@ -1,6 +1,5 @@
-using Infrastructure.Interfaces;
 
-namespace Infrastructure.User.Commands
+namespace Domain.User.Commands
 {
     public class RegisterUserCommand: ICommand
     {

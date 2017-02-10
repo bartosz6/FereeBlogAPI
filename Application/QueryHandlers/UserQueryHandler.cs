@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Domain.User;
+using Domain.User.Queries;
 using Infrastructure.Interfaces;
-using Infrastructure.User.Queries;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.User.QueryHandlers
+namespace Application.QueryHandlers
 {
     public class UserQueryHandler : IQueryHandler<GetUserQuery, ApplicationUser>
     {

@@ -1,4 +1,4 @@
-namespace Infrastructure.Interfaces
+namespace Domain
 {
     //marker interface
     public interface ICommand

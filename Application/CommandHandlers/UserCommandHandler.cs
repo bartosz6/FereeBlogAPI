@@ -1,11 +1,11 @@
 using Infrastructure.Interfaces;
-using Infrastructure.User.Commands;
 using Microsoft.AspNetCore.Identity;
 using Domain.User;
 using System;
 using System.Threading.Tasks;
+using Domain.User.Commands;
 
-namespace Infrastructure.User.CommandHandlers
+namespace Application.CommandHandlers
 {
     public class UserCommandHandler : 
         ICommandHandler<LoginCommand>,

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.User;
 using Domain.User.AccountViewModels;
 using Infrastructure.Interfaces;
-using Infrastructure.User.Commands;
-using Infrastructure.User.Queries;
 using Web.Services;
+using Domain.User.Commands;
+using Domain.User.Queries;
 
 namespace WebApplication.Controllers
 {

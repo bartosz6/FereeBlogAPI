@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WebApplication.Data;
 using Domain.User;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,6 +16,7 @@ using Web.Jwt;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Web.Services;
+using Infrastructure.Context;
 
 namespace WebApplication
 {
@@ -43,7 +43,7 @@ namespace WebApplication
             {
                 Audience = "audience",
                 Issuer = "issurer",
-                SigningCredentials = new SigningCredentials (
+                SigningCredentials = new SigningCredentials(
                         _key,
                         SecurityAlgorithms.HmacSha256)
             };
@@ -62,14 +62,17 @@ namespace WebApplication
         {
             // Add framework services.
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+            services.AddDbContext<WriteContext>(options =>
+            {
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Web"));
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<WriteContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc(options => {
+            services.AddMvc(options =>
+            {
                 options.Filters.Add(
                     new AuthorizeFilter(
                         (new AuthorizationPolicyBuilder())
@@ -100,27 +103,38 @@ namespace WebApplication
                 .RegisterType<AuthService>()
                 .As<IAuthService>()
                 .SingleInstance();
-                
-            var references = Assembly.GetEntryAssembly().GetReferencedAssemblies().ToList();
-            foreach(var assembly in references) 
-            {
+
+            var infrastructureAssemblyName = new AssemblyName("Infrastructure");
+            var applicationAssemblyName = new AssemblyName("Application");
+            var domainAssemblyName = new AssemblyName("Domain");
+
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(infrastructureAssemblyName))
+                .Where(@type =>
+                    @type.Name.EndsWith("Dispatcher")
+                )
+                .AsImplementedInterfaces();
+
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(applicationAssemblyName))
+                .Where(@type =>
+                    @type.Name.EndsWith("Handler")
+
+                )
+                .AsImplementedInterfaces();
                 containerBuilder
-                    .RegisterAssemblyTypes(Assembly.Load(assembly))
-                    .Where(@type => 
-                        @type.Name.EndsWith("Handler")
-                        || @type.Name.EndsWith("Dispatcher")
-                        || @type.Name.EndsWith("Command")
-                        || @type.Name.EndsWith("Query")
-                    )
-                    .AsImplementedInterfaces();
-            };
-            
+                .RegisterAssemblyTypes(Assembly.Load(applicationAssemblyName))
+                .Where(@type =>
+                    @type.Name.EndsWith("Command")
+                    || @type.Name.EndsWith("Query")
+                )
+                .AsImplementedInterfaces();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
-            IHostingEnvironment env, 
+            IApplicationBuilder app,
+            IHostingEnvironment env,
             ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
@@ -144,11 +158,11 @@ namespace WebApplication
                 AutomaticChallenge = true,
                 TokenValidationParameters = new TokenValidationParameters
                 {
-                     ValidateIssuer = true,
-                     ValidIssuer = _tokenAuthOptions.Issuer,
+                    ValidateIssuer = true,
+                    ValidIssuer = _tokenAuthOptions.Issuer,
 
-                     ValidateAudience = true,
-                     ValidAudience = _tokenAuthOptions.Audience,
+                    ValidateAudience = true,
+                    ValidAudience = _tokenAuthOptions.Audience,
 
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = _key,
@@ -156,8 +170,9 @@ namespace WebApplication
                 }
             });
 
-            app.UseMvc(options => {
-                
+            app.UseMvc(options =>
+            {
+
             });
 
             //Kill all dependencies

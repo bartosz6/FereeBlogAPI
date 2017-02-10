@@ -1,4 +1,4 @@
-namespace Infrastructure.Interfaces
+namespace Domain
 {
     public interface IQuery<TResult>
     {
