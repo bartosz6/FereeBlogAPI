@@ -13,7 +13,7 @@ namespace Domain.Comment
         public Comment Parent {get; set;}
         public IEnumerable<Comment> Childrens {get; set;}
 
-        public Comment()
+        public Comment() : base()
         {
             Childrens = new List<Comment>();
         }
