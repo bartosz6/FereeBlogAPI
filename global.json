@@ -3,6 +3,8 @@
         "Domain",
         "Web",
         "Infrastructure",
-        "Application"
+        "Application",
+        
+        "DomainTests"
     ]
 }

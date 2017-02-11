@@ -91,6 +91,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "WebApplication"
+    "defaultNamespace": "Web"
   }
 }

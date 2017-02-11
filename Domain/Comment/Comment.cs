@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Domain.User;
@@ -23,9 +24,17 @@ namespace Domain.Comment
             Author = author;
             Content = content;
             Parent = parent;
+
+            parent.AddChildrenComment(this);
         }
 
-        void AddChildrenComment(Comment children) {
+        public void AddChildrenComment(Comment children) {
+            if(Childrens.Contains(children))
+                throw new InvalidOperationException("Duplicated comment");
+
+            if(children.Equals(this))
+                throw new InvalidOperationException("Looped comment");
+
             children.Parent = this;
             var newChildrens = Childrens.ToList();
             newChildrens.Add(children);
