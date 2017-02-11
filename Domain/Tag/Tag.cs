@@ -6,5 +6,10 @@ namespace Domain.Tag
     {
         public IEnumerable<Domain.Post_Tag.PostTag> PostTags {get; set;}
         public string Name {get; set;}
+
+        public Tag(string name) : base()
+        {
+            Name = name;
+        }
     }
 }
