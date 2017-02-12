@@ -2,21 +2,20 @@ using System.Threading.Tasks;
 using Domain.User;
 using Domain.User.Queries;
 using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.QueryHandlers
 {
-    public class UserQueryHandler : IQueryHandler<GetUserQuery, ApplicationUser>
+    public class UserQueryHandler : IQueryHandler<GetUserByEmailQuery, ApplicationUser>
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IReadRepository<ApplicationUser> _userReadRepository;
         
-        public UserQueryHandler(UserManager<ApplicationUser> userManager) {
-            _userManager = userManager;
+        public UserQueryHandler(IReadRepository<ApplicationUser> userReadRepository) {
+            _userReadRepository = userReadRepository;
         }
 
-        public async Task<ApplicationUser> Handle(GetUserQuery query)
+        public async Task<ApplicationUser> Handle(GetUserByEmailQuery query)
         {
-            var user = await _userManager.FindByEmailAsync(query.Login);
+            var user = await _userReadRepository.Get(u => u.Email == query.Login);
             return user;
         }
     }

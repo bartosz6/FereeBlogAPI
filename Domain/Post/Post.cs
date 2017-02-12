@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -5,7 +6,7 @@ using Domain.User;
 
 namespace Domain.Post
 {
-    public class Post : BaseDomainEntity
+    public class Post : IBaseDomainEntity
     {
         public string Content { get; set; }
         public ApplicationUser Author { get; set; }
@@ -13,6 +14,10 @@ namespace Domain.Post
 
         public IEnumerable<Domain.Post_Tag.PostTag> PostTags { get; set; }
         public IEnumerable<Domain.Comment.Comment> Comments { get; set; }
+        public Guid Id { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime? Deleted { get; set; }
 
         public Post() : base()
         {

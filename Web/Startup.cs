@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Web.Services;
 using Infrastructure.Context;
+using Infrastructure.Repositories;
+using Infrastructure.Interfaces;
 
 namespace WebApplication
 {
@@ -41,11 +43,9 @@ namespace WebApplication
             _key = new StaticKeyGen().Key;
             _tokenAuthOptions = new TokenAuthOptions()
             {
-                Audience = "audience",
+                Audience = "http://localhost:5000",
                 Issuer = "issurer",
-                SigningCredentials = new SigningCredentials(
-                        _key,
-                        SecurityAlgorithms.HmacSha256)
+                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256)
             };
 
             builder.AddEnvironmentVariables();
@@ -80,7 +80,7 @@ namespace WebApplication
                         .Build()
                     )
                 );
-            });
+            }).AddControllersAsServices();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -107,6 +107,7 @@ namespace WebApplication
             var infrastructureAssemblyName = new AssemblyName("Infrastructure");
             var applicationAssemblyName = new AssemblyName("Application");
             var domainAssemblyName = new AssemblyName("Domain");
+            var webAssemblyName = new AssemblyName("Web");
 
             containerBuilder
                 .RegisterAssemblyTypes(Assembly.Load(infrastructureAssemblyName))
@@ -122,13 +123,52 @@ namespace WebApplication
 
                 )
                 .AsImplementedInterfaces();
-                containerBuilder
-                .RegisterAssemblyTypes(Assembly.Load(applicationAssemblyName))
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(domainAssemblyName))
                 .Where(@type =>
                     @type.Name.EndsWith("Command")
                     || @type.Name.EndsWith("Query")
                 )
                 .AsImplementedInterfaces();
+
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(webAssemblyName))
+                .Where(@type =>
+                    @type.Name.EndsWith("Controller")
+                )
+                .InstancePerLifetimeScope()
+                .PropertiesAutowired();
+
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .Named<DbContext>("WriteContext")
+                .InstancePerLifetimeScope();
+
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .Named<DbContext>("ReadContext")
+                .InstancePerLifetimeScope();
+
+            containerBuilder
+                .RegisterGeneric(typeof(WriteRepository<>))
+                .As(typeof(IWriteRepository<>))
+                .WithParameter(
+                    (param, container) => param.ParameterType == typeof(DbContext), 
+                    (param, container) => container.ResolveNamed<DbContext>("WriteContext"));
+
+            containerBuilder
+                .RegisterGeneric(typeof(ReadRepository<>))
+                .As(typeof(IReadRepository<>))
+                .WithParameter(
+                    (param, container) => param.ParameterType == typeof(DbContext), 
+                    (param, container) => container.ResolveNamed<DbContext>("ReadContext"));
+
+            //TODO: create read context and resolve it dynamically
+            // containerBuilder
+            //     .RegisterType<ReadContext>()
+            //     .As<DbContext>()
+            //     .SingleInstance();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -151,7 +191,7 @@ namespace WebApplication
             app.UseStaticFiles();
 
             app.UseIdentity();
-
+          
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
                 AutomaticAuthenticate = true,
@@ -172,7 +212,6 @@ namespace WebApplication
 
             app.UseMvc(options =>
             {
-
             });
 
             //Kill all dependencies
