@@ -12,8 +12,8 @@ namespace Domain.Post
         public ApplicationUser Author { get; set; }
         public string BannerImageUrl { get; set; }
 
-        public IEnumerable<Domain.Post_Tag.PostTag> PostTags { get; set; }
-        public IEnumerable<Domain.Comment.Comment> Comments { get; set; }
+        public ICollection<Domain.Tag.Tag> Tags { get; set; }
+        public ICollection<Domain.Comment.Comment> Comments { get; set; }
         public Guid Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
@@ -32,23 +32,7 @@ namespace Domain.Post
             Content = content;
             Author = author;
             BannerImageUrl = bannerImageUrl;
-
-            var postTags = new List<Domain.Post_Tag.PostTag>();
-            var tags = GetTags();
-            if (tags != null)
-            {
-                foreach (var tag in tags)
-                {
-                    postTags.Add(
-                        new Domain.Post_Tag.PostTag
-                        {
-                            Post = this,
-                            Tag = tag
-                        }
-                    );
-                }
-            }
-            PostTags = postTags;
+            Tags = GetTags().ToList();
         }
 
         public IEnumerable<Domain.Tag.Tag> GetTags()

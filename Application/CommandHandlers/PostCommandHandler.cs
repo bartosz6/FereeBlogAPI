@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Domain.Post;
 using Domain.Post.Commands;
@@ -26,7 +27,7 @@ namespace Application.CommandHandlers
         {
             var author = new ApplicationUser { Id = command.AuthorId.ToString() };
             var post = new Post(command.Content, author, command.BannerImageUrl);
-            
+
             _postRepository.Attach(author);
             return _postRepository.Create(post);
         }

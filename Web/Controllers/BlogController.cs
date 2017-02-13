@@ -14,11 +14,23 @@ namespace Web.Controllers
         [Route("/api/blog/add")]
         public async Task<object> Add([FromBody] AddModel model)
         {
-            var id = CurrentUserId;
+            if (ModelState.IsValid)
+            {
+                var id = CurrentUserId;
 
-            await CommandDispatcher.Dispatch(new CreatePostCommand(model.Content, id.Value, null));
+                await CommandDispatcher.Dispatch(new CreatePostCommand(model.Content, id.Value, null));
 
-            return HttpStatusCode.OK;
+                return HttpStatusCode.OK;
+            }
+
+            return ModelState.ToString();
+        }
+
+        [HttpGet]
+        [Route("/api/blog/query")]
+        public object Get(BlogQueryModel model)
+        {
+            return model;
         }
     }
 }

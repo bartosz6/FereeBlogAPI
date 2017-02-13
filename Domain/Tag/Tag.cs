@@ -5,12 +5,15 @@ namespace Domain.Tag
 {
     public class Tag: IBaseDomainEntity
     {
-        public IEnumerable<Domain.Post_Tag.PostTag> PostTags {get; set;}
+        //TODO: no many-to-many in efCore
+        public Domain.Post.Post Post {get; set;}
         public string Name {get; set;}
         public Guid Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
         public DateTime? Deleted { get; set; }
+
+        public Tag() : base() {}
 
         public Tag(string name) : base()
         {
