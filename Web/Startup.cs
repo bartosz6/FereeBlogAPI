@@ -138,6 +138,11 @@ namespace WebApplication
                 )
                 .InstancePerLifetimeScope()
                 .PropertiesAutowired();
+            
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .As<DbContext>()
+                .InstancePerLifetimeScope();
 
             containerBuilder
                 .RegisterType<WriteContext>()
@@ -150,24 +155,8 @@ namespace WebApplication
                 .InstancePerLifetimeScope();
 
             containerBuilder
-                .RegisterGeneric(typeof(WriteRepository<>))
-                .As(typeof(IWriteRepository<>))
-                .WithParameter(
-                    (param, container) => param.ParameterType == typeof(DbContext), 
-                    (param, container) => container.ResolveNamed<DbContext>("WriteContext"));
-
-            containerBuilder
-                .RegisterGeneric(typeof(ReadRepository<>))
-                .As(typeof(IReadRepository<>))
-                .WithParameter(
-                    (param, container) => param.ParameterType == typeof(DbContext), 
-                    (param, container) => container.ResolveNamed<DbContext>("ReadContext"));
-
-            //TODO: create read context and resolve it dynamically
-            // containerBuilder
-            //     .RegisterType<ReadContext>()
-            //     .As<DbContext>()
-            //     .SingleInstance();
+                .RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>));
 
         }
 

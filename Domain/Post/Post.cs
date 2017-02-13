@@ -34,7 +34,7 @@ namespace Domain.Post
             BannerImageUrl = bannerImageUrl;
 
             var postTags = new List<Domain.Post_Tag.PostTag>();
-            var tags = GetTags(content);
+            var tags = GetTags();
             if (tags != null)
             {
                 foreach (var tag in tags)
@@ -51,10 +51,10 @@ namespace Domain.Post
             PostTags = postTags;
         }
 
-        public IEnumerable<Domain.Tag.Tag> GetTags(string content)
+        public IEnumerable<Domain.Tag.Tag> GetTags()
         {
             var regex = new Regex(@"(?<=#)\w+");
-            var matches = regex.Matches(content)
+            var matches = regex.Matches(Content)
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .Distinct()

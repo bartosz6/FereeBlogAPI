@@ -7,9 +7,9 @@ namespace Application.QueryHandlers
 {
     public class UserQueryHandler : IQueryHandler<GetUserByEmailQuery, ApplicationUser>
     {
-        private readonly IReadRepository<ApplicationUser> _userReadRepository;
+        private readonly IRepository<ApplicationUser> _userReadRepository;
         
-        public UserQueryHandler(IReadRepository<ApplicationUser> userReadRepository) {
+        public UserQueryHandler(IRepository<ApplicationUser> userReadRepository) {
             _userReadRepository = userReadRepository;
         }
 
