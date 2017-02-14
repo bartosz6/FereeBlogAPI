@@ -1,8 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Domain.Post.Commands;
-using Domain.User;
-using Domain.User.Queries;
+using Domain.Post.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Blog;
 
@@ -28,9 +27,21 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("/api/blog/query")]
-        public object Get(BlogQueryModel model)
+        public async Task<object> GetAsync(BlogQueryModel model)
         {
-            return model;
+            if (ModelState.IsValid)
+            {
+                var result = await QueryDispatcher.Dispatch<GetPostsQuery, string>(
+                    new GetPostsQuery(
+                        model.StartIndex,
+                        model.Length,
+                        model.Tag
+                    ));
+
+                return result;
+            }
+
+            return HttpStatusCode.InternalServerError;
         }
     }
 }
