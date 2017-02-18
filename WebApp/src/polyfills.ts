@@ -17,3 +17,10 @@ import 'core-js/es6/reflect';
 
 import 'core-js/es7/reflect';
 import 'zone.js/dist/zone';
+
+import 'jquery/dist/jquery.min.js'
+
+import 'materialize-css/dist/css/materialize.min.css'
+import 'materialize-css/dist/js/materialize.js'
+
+

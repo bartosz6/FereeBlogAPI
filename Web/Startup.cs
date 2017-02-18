@@ -19,6 +19,10 @@ using Web.Services;
 using Infrastructure.Context;
 using Infrastructure.Repositories;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using System.Buffers;
 
 namespace WebApplication
 {
@@ -66,6 +70,10 @@ namespace WebApplication
             {
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Web"));
             });
+            services.AddDbContext<ReadContext>(options =>
+            {
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Web"));
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<WriteContext>()
@@ -80,7 +88,13 @@ namespace WebApplication
                         .Build()
                     )
                 );
-            }).AddControllersAsServices();
+
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var formatter = new JsonOutputFormatter(settings, ArrayPool<char>.Shared);
+
+            })
+            .AddControllersAsServices();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -138,7 +152,7 @@ namespace WebApplication
                 )
                 .InstancePerLifetimeScope()
                 .PropertiesAutowired();
-            
+
             containerBuilder
                 .RegisterType<WriteContext>()
                 .As<DbContext>()
@@ -180,7 +194,7 @@ namespace WebApplication
             app.UseStaticFiles();
 
             app.UseIdentity();
-          
+
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
                 AutomaticAuthenticate = true,

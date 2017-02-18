@@ -42,6 +42,8 @@ namespace Application.QueryHandlers
             })
             .ToList();
 
+            // TODO: wczytywac gotowe struktury z read modelu
+
             return Task.Factory.StartNew(
                 () => JsonConvert.SerializeObject(result, new JsonSerializerSettings
                 {

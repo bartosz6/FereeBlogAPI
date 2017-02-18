@@ -2,6 +2,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Domain.Post.Commands;
 using Domain.Post.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models.Blog;
 
@@ -25,6 +26,7 @@ namespace Web.Controllers
             return ModelState.ToString();
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("/api/blog/query")]
         public async Task<object> GetAsync(BlogQueryModel model)

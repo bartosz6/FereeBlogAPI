@@ -21,11 +21,11 @@ export class AppComponent {
       this.posts = this._store.let(postsReducer.getPosts);
   }
   
-  addPost(post: postsActions.AddPostActionModel) {
-    this._store.dispatch(new postsActions.AddPostAction(post));
-  }
+  // addPost(post: postsActions.AddPostActionModel) {
+  //   this._store.dispatch(new postsActions.AddPostAction(post));
+  // }
 
-  deletePost(id: postsActions.DeletePostActionModel) {
-    this._store.dispatch(new postsActions.DeletePostAction(id));
-  }
+  // deletePost(id: postsActions.DeletePostActionModel) {
+  //   this._store.dispatch(new postsActions.DeletePostAction(id));
+  // }
 }

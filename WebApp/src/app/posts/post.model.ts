@@ -3,7 +3,10 @@ import { UUID } from 'angular2-uuid';
 
 export interface Post {
     id: UUID;
-    content: string;
+    brief: string;
+    title: string;
     date: Date;
     author: string;
+    tags: Array<string>;
+    imageUrl: string;
 }

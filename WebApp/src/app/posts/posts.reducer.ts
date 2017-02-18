@@ -12,41 +12,22 @@ export interface State {
 const initialState : State = {
     posts: [{
         id: UUID.UUID(),
-        content: "Lorem ipsum dolor sit amet.",
+        brief: "Lorem ipsum dolor sit amet...",
+        title: "Tiiiiitle",
         date: new Date(),
-        author: "Bartosz Kowalczyk"
+        author: "Bartosz Kowalczyk",
+        imageUrl: "http://materializecss.com/images/sample-1.jpg",
+        tags: ['test', 'heheszki', 'oopa']
     }]
 }
 
 export function reducer(state = initialState, action: Action): State {
     switch(action.type) {
-        case posts.ActionTypes.ADD_POST:
+        case posts.ActionTypes.NAVIGATE_TO_DETAILS:
         {
-            const payload: posts.AddPostActionModel = action.payload;
-            const post: Post = { 
-                date: new Date(), 
-                id: UUID.UUID(),
-                content: payload.content,
-                author: payload.author
-            };
-            return {
-                posts: [...state.posts, post]
-            }
-        }
-        case posts.ActionTypes.EDIT_POST:
-        {
-            const payload: posts.EditPostActionModel = action.payload;
-            const post : Post = Object.assign({}, payload, { date: new Date() })
-            return {
-                posts: [...(state.posts.filter(post => post.id === payload.id)), post]
-            }
-        }
-        case posts.ActionTypes.DELETE_POST:
-        {
-            const payload: posts.DeletePostActionModel = action.payload;
-            return {
-                posts: state.posts.filter(post => post.id !== payload.id)
-            }
+            const payload: posts.NagivateToDetailsModel = action.payload;
+            
+            return null;
         }
         default:
             return state;
