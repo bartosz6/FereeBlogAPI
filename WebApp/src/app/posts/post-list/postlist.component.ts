@@ -1,0 +1,29 @@
+import { Component, OnInit, Input, Output, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { PostListItem } from '../post-list-item/postlistitem.model';
+import { UUID } from 'angular2-uuid';
+import { State, Store } from "@ngrx/store";
+import { AppState } from '../../app.reducer';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/let';
+import 'rxjs/add/operator/map';
+import * as postListReducer from './postlist.reducer';
+import * as postListActions from './postlist.actions';
+import { go, replace, search, show, back, forward } from '@ngrx/router-store';
+
+@Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'post-list',
+    templateUrl: 'postlist.component.html'
+})
+export class PostListComponent {
+    posts: Observable<PostListItem[]>
+
+    navigateToPostDetails(postId: UUID) {
+        console.info(`Navigation to post ${postId} details.`);
+        this._store.dispatch(go(['/path', { routeParam: 1 }], { query: 'string' }));
+    }
+
+    constructor(private _store: Store<AppState>) { 
+        this.posts = _store.select(a => a.postList).let(postListReducer.getPosts);
+    }
+}
