@@ -5,13 +5,17 @@ using Domain.User;
 
 namespace Domain.Comment
 {
-    public class Comment : BaseDomainEntity
+    public class Comment : IBaseDomainEntity
     {
         public Domain.Post.Post Post {get; set;}
         public ApplicationUser Author { get; set; }
         public string Content { get; set; }
         public Comment Parent {get; set;}
         public IEnumerable<Comment> Childrens {get; set;}
+        public Guid Id { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime? Modified { get; set; }
+        public DateTime? Deleted { get; set; }
 
         public Comment() : base()
         {

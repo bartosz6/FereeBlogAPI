@@ -31,28 +31,19 @@ namespace Web.Migrations
 
                     b.Property<DateTime?>("Modified");
 
+                    b.Property<Guid?>("ParentId");
+
                     b.Property<Guid?>("PostId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("ParentId");
+
                     b.HasIndex("PostId");
 
                     b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Domain.Post_Tag.PostTag", b =>
-                {
-                    b.Property<Guid>("PostId");
-
-                    b.Property<Guid>("TagId");
-
-                    b.HasKey("PostId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("Post_Tag");
                 });
 
             modelBuilder.Entity("Domain.Post.Post", b =>
@@ -92,7 +83,11 @@ namespace Web.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<Guid?>("PostId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Tags");
                 });
@@ -109,6 +104,10 @@ namespace Web.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<DateTime>("Created");
+
+                    b.Property<DateTime?>("Deleted");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -117,6 +116,8 @@ namespace Web.Migrations
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<DateTime?>("Modified");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -261,22 +262,13 @@ namespace Web.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("Domain.Comment.Comment", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId");
+
                     b.HasOne("Domain.Post.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
-                });
-
-            modelBuilder.Entity("Domain.Post_Tag.PostTag", b =>
-                {
-                    b.HasOne("Domain.Post.Post", "Post")
-                        .WithMany("PostTags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Domain.Tag.Tag", "Tag")
-                        .WithMany("PostTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Post.Post", b =>
@@ -284,6 +276,13 @@ namespace Web.Migrations
                     b.HasOne("Domain.User.ApplicationUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("Domain.Tag.Tag", b =>
+                {
+                    b.HasOne("Domain.Post.Post", "Post")
+                        .WithMany("Tags")
+                        .HasForeignKey("PostId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

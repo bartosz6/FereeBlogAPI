@@ -7,50 +7,39 @@ using Infrastructure.Interfaces;
 using Web.Services;
 using Domain.User.Commands;
 using Domain.User.Queries;
+using Microsoft.AspNetCore.Http.Internal;
+using Web.Controllers;
 
 namespace WebApplication.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IQueryDispatcher _queryDispatcher;
-        private readonly IAuthService _authService;
-
-        public AccountController(
-            ICommandDispatcher commandDispatcher,
-            IQueryDispatcher queryDispatcher,
-            IAuthService authService)
-        {
-            _queryDispatcher = queryDispatcher;
-            _commandDispatcher = commandDispatcher;
-            _authService = authService;
-        }
-
+        public IAuthService AuthService {get; set;}
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("/api/login")]
+        [Route("/api/user/login")]
         public async Task<object> Login([FromBody] LoginViewModel model)
         {
-            await _commandDispatcher.Dispatch(new LoginCommand(model.Email, model.Password));
+            await CommandDispatcher.Dispatch(new LoginCommand(model.Email, model.Password));
 
-            var user = await _queryDispatcher.Dispatch<GetUserQuery, ApplicationUser>(new GetUserQuery(model.Email));
+            var user = await QueryDispatcher.Dispatch<GetUserByEmailQuery, ApplicationUser>(new GetUserByEmailQuery(model.Email));
 
-            var newToken = _authService.GetTokenForUser(user);
+            var newToken = AuthService.GetTokenForUser(user);
 
             return newToken;
         }
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("/api/register")]
+        [Route("/api/user/register")]
         public async Task<object> Register([FromBody] LoginViewModel model)
         {
-            await _commandDispatcher.Dispatch(new RegisterUserCommand(model.Email, model.Password, model.Email));
+            await CommandDispatcher.Dispatch(new RegisterUserCommand(model.Email, model.Password, model.Email));
 
-            var user = await _queryDispatcher.Dispatch<GetUserQuery, ApplicationUser>(new GetUserQuery(model.Email));
+            var user = await QueryDispatcher.Dispatch<GetUserByEmailQuery, ApplicationUser>(new GetUserByEmailQuery(model.Email));
 
-            var newToken = _authService.GetTokenForUser(user);
+            var newToken = AuthService.GetTokenForUser(user);
 
             return newToken;
         }

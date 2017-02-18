@@ -17,6 +17,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Web.Services;
 using Infrastructure.Context;
+using Infrastructure.Repositories;
+using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using System.Buffers;
 
 namespace WebApplication
 {
@@ -41,11 +47,9 @@ namespace WebApplication
             _key = new StaticKeyGen().Key;
             _tokenAuthOptions = new TokenAuthOptions()
             {
-                Audience = "audience",
+                Audience = "http://localhost:5000",
                 Issuer = "issurer",
-                SigningCredentials = new SigningCredentials(
-                        _key,
-                        SecurityAlgorithms.HmacSha256)
+                SigningCredentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256)
             };
 
             builder.AddEnvironmentVariables();
@@ -66,6 +70,10 @@ namespace WebApplication
             {
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Web"));
             });
+            services.AddDbContext<ReadContext>(options =>
+            {
+                options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Web"));
+            });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<WriteContext>()
@@ -80,7 +88,13 @@ namespace WebApplication
                         .Build()
                     )
                 );
-            });
+
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                var formatter = new JsonOutputFormatter(settings, ArrayPool<char>.Shared);
+
+            })
+            .AddControllersAsServices();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -107,6 +121,7 @@ namespace WebApplication
             var infrastructureAssemblyName = new AssemblyName("Infrastructure");
             var applicationAssemblyName = new AssemblyName("Application");
             var domainAssemblyName = new AssemblyName("Domain");
+            var webAssemblyName = new AssemblyName("Web");
 
             containerBuilder
                 .RegisterAssemblyTypes(Assembly.Load(infrastructureAssemblyName))
@@ -122,13 +137,41 @@ namespace WebApplication
 
                 )
                 .AsImplementedInterfaces();
-                containerBuilder
-                .RegisterAssemblyTypes(Assembly.Load(applicationAssemblyName))
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(domainAssemblyName))
                 .Where(@type =>
                     @type.Name.EndsWith("Command")
                     || @type.Name.EndsWith("Query")
                 )
                 .AsImplementedInterfaces();
+
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.Load(webAssemblyName))
+                .Where(@type =>
+                    @type.Name.EndsWith("Controller")
+                )
+                .InstancePerLifetimeScope()
+                .PropertiesAutowired();
+
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .As<DbContext>()
+                .InstancePerLifetimeScope();
+
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .Named<DbContext>("WriteContext")
+                .InstancePerLifetimeScope();
+
+            containerBuilder
+                .RegisterType<WriteContext>()
+                .Named<DbContext>("ReadContext")
+                .InstancePerLifetimeScope();
+
+            containerBuilder
+                .RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -172,7 +215,6 @@ namespace WebApplication
 
             app.UseMvc(options =>
             {
-
             });
 
             //Kill all dependencies

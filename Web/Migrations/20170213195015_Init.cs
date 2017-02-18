@@ -10,21 +10,6 @@ namespace Web.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tags",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    Deleted = table.Column<DateTime>(nullable: true),
-                    Modified = table.Column<DateTime>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -32,10 +17,13 @@ namespace Web.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     AvatarUrl = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Deleted = table.Column<DateTime>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    Modified = table.Column<DateTime>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
@@ -197,6 +185,7 @@ namespace Web.Migrations
                     Created = table.Column<DateTime>(nullable: false),
                     Deleted = table.Column<DateTime>(nullable: true),
                     Modified = table.Column<DateTime>(nullable: true),
+                    ParentId = table.Column<Guid>(nullable: true),
                     PostId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -209,6 +198,12 @@ namespace Web.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Comments_Comments_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Comments_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
@@ -217,27 +212,25 @@ namespace Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Post_Tag",
+                name: "Tags",
                 columns: table => new
                 {
-                    PostId = table.Column<Guid>(nullable: false),
-                    TagId = table.Column<Guid>(nullable: false)
+                    Id = table.Column<Guid>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Deleted = table.Column<DateTime>(nullable: true),
+                    Modified = table.Column<DateTime>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    PostId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Post_Tag", x => new { x.PostId, x.TagId });
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_Tag_Posts_PostId",
+                        name: "FK_Tags_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Post_Tag_Tags_TagId",
-                        column: x => x.TagId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -246,19 +239,24 @@ namespace Web.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_ParentId",
+                table: "Comments",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
                 table: "Comments",
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_Tag_TagId",
-                table: "Post_Tag",
-                column: "TagId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_PostId",
+                table: "Tags",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -303,7 +301,7 @@ namespace Web.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Post_Tag");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -322,9 +320,6 @@ namespace Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
-
-            migrationBuilder.DropTable(
-                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -1,9 +1,9 @@
 
 namespace Domain.User.Queries
 {
-    public class GetUserQuery : IQuery<ApplicationUser>
+    public class GetUserByEmailQuery : IQuery<ApplicationUser>
     {
-        public GetUserQuery(string login) {
+        public GetUserByEmailQuery(string login) {
             Login = login;
         }
         

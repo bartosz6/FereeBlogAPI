@@ -27,7 +27,7 @@ namespace Web.Services
             var securityToken = handler.CreateToken(new Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor()
             {
                 Issuer = _tokenAuthOptions.Issuer,
-                Audience = _tokenAuthOptions.Issuer,
+                Audience = _tokenAuthOptions.Audience,
                 SigningCredentials = _tokenAuthOptions.SigningCredentials,
                 Subject = identity,
                 Expires = DateTime.UtcNow.AddDays(5)

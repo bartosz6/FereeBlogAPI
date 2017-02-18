@@ -37,7 +37,7 @@ namespace Application.CommandHandlers
         public async Task Handle(LoginCommand command)
         {
             var result = await _signInManager
-                .PasswordSignInAsync(command.Login, command.Password, true, false);
+                .PasswordSignInAsync(command.Login, command.Password, false, false);
 
             if (!result.Succeeded)
                 throw new UnauthorizedAccessException($"Login error for user {command.Login}");
