@@ -10,6 +10,11 @@ export class PostListItemComponent {
     @Input() post: PostListItem;
     @Output() detailsEvent = new EventEmitter();
 
+    get showAvatar() : boolean {
+        let result = !!this.post && !!this.post.author && !!this.post.author.avatarUrl;
+        return result;
+    }
+
     details() {
         this.detailsEvent.emit(this.post.id);
     }

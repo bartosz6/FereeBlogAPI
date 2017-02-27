@@ -10,17 +10,7 @@ export interface PostListState {
 }
 
 const initialState : PostListState = {
-    posts: [{
-        id: UUID.UUID(),
-        title: "Tiiiiitle",
-        date: new Date(),
-        author: { 
-            name: "Bartosz Kowalczyk" ,
-            avatarUrl: ''
-        },
-        imageUrl: "http://materializecss.com/images/sample-1.jpg",
-        tags: ['test', 'heheszki', 'oopa']
-    }]
+    posts: []
 }
 
 export function postListReducer(state = initialState, action: Action): PostListState {
@@ -28,7 +18,41 @@ export function postListReducer(state = initialState, action: Action): PostListS
         case actions.ActionTypes.LOAD_MORE_POSTS:
         {
             const payload: actions.LoadMorePostsModel = action.payload;
-            throw "Trying To Navigate REDUCER";
+            return state;
+        }
+        case actions.ActionTypes.LOAD_MORE_POSTS_OK:
+        {
+            const payload: actions.LoadMorePostsOkModel = action.payload;
+            let s = Object.assign({}, state, {
+                posts: [...state.posts, ...payload.posts]
+            });
+            console.log(s);
+            return s;
+        }
+        case actions.ActionTypes.LOAD_MORE_POSTS_ERROR:
+        {
+            const payload: actions.LoadMorePostsErrorModel = action.payload;
+            console.warn(payload.message);
+            return state;
+        }
+        case actions.ActionTypes.FILTER_LIST:
+        {
+            const payload: actions.FilterListModel = action.payload;
+            return state;
+        }
+        case actions.ActionTypes.FILTER_LIST_OK:
+        {
+            const payload: actions.FilterListOkModel = action.payload;
+
+            return Object.assign({}, state, {
+                posts: payload.posts
+            });
+        }
+        case actions.ActionTypes.FILTER_LIST_ERROR:
+        {
+            const payload: actions.FilterListErrorModel = action.payload;
+            console.warn(payload.message);
+            return state;
         }
         default:
             return state;

@@ -34,11 +34,13 @@ namespace Application.QueryHandlers
             .Take(query.Length)
             .Select(r => new
             {
-                r.Created,
-                r.Author.UserName,
-                r.BannerImageUrl,
-                r.Content,
-                r.Tags
+                date = r.Created,
+                author = new {
+                    name = r.Author.UserName
+                },
+                imageUrl = r.BannerImageUrl,
+                tags = r.Tags.Select(t => t.Name),
+                title = r.Content.Substring(0, 25) + "..."
             })
             .ToList();
 

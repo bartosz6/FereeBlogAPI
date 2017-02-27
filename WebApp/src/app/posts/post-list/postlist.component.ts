@@ -17,10 +17,27 @@ import { go, replace, search, show, back, forward } from '@ngrx/router-store';
 })
 export class PostListComponent {
     posts: Observable<PostListItem[]>
-
+    
     navigateToPostDetails(postId: UUID) {
         console.info(`Navigation to post ${postId} details.`);
-        this._store.dispatch(go(['/path', { routeParam: 1 }], { query: 'string' }));
+        this._store.dispatch(go(['/post'], { id: postId }));
+    }
+
+    //todo: jak policzyc ilosc postow - 
+    ngOnInit() {
+        this._store.dispatch(new postListActions.LoadMorePosts({
+            length: 5,
+            startIndex: 0,
+            tag: ""
+        }));
+    }
+
+    more() {
+        this._store.dispatch(new postListActions.LoadMorePosts({
+            length: 5,
+            startIndex: 15,
+            tag: ""
+        }));
     }
 
     constructor(private _store: Store<AppState>) { 
