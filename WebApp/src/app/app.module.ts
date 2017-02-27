@@ -22,6 +22,9 @@ import { PostsEffects } from './posts/effects/posts.effects';
 import { AppConsts } from './app.consts';
 import { QueryHelper } from './common/helpers/query.helper';
 
+import { PostsService } from './infrastructure/services/PostsService';
+import { IPostsService } from './infrastructure/services/IPostsService';
+
 const appRoutes: Routes = [
   { path: '', component: PostListComponent },
   { path: 'post', component: PostDetailsComponent },
@@ -47,7 +50,12 @@ const appRoutes: Routes = [
     }),
     EffectsModule.run(PostsEffects)
   ],
-  providers: [QueryHelper, AppConsts],
+  providers: [
+
+    { provide: AppConsts, useClass: AppConsts },
+    { provide: IPostsService, useClass: PostsService }
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
