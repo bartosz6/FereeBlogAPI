@@ -1,12 +1,14 @@
 
 import { UUID } from 'angular2-uuid';
 
-export interface Post {
+export interface PostListItem {
     id: UUID;
-    brief: string;
     title: string;
     date: Date;
-    author: string;
+    author: {
+        avatarUrl: string;
+        name: string;
+    }
     tags: Array<string>;
     imageUrl: string;
 }

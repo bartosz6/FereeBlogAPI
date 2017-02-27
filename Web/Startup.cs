@@ -64,6 +64,16 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("AllowAllOrigins",
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                })
+            );
+            
             // Add framework services.
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<WriteContext>(options =>
@@ -88,13 +98,15 @@ namespace WebApplication
                         .Build()
                     )
                 );
-
-                var settings = new JsonSerializerSettings();
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                var formatter = new JsonOutputFormatter(settings, ArrayPool<char>.Shared);
-
             })
-            .AddControllersAsServices();
+            .AddControllersAsServices()
+            .AddJsonOptions(options =>
+                  {
+                      options.SerializerSettings.ContractResolver =
+                          new CamelCasePropertyNamesContractResolver();
+                  });
+
+            
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.Populate(services);
@@ -184,6 +196,8 @@ namespace WebApplication
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseCors("AllowAllOrigins");
+
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
@@ -216,6 +230,8 @@ namespace WebApplication
             app.UseMvc(options =>
             {
             });
+
+
 
             //Kill all dependencies
             appLifetime.ApplicationStopped.Register(() => _container.Dispose());
