@@ -23,6 +23,7 @@ import { AppConsts } from './app.consts';
 import { QueryHelper } from './common/helpers/query.helper';
 
 import { PostsService } from './infrastructure/services/PostsService';
+import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
 
 const appRoutes: Routes = [
@@ -53,7 +54,7 @@ const appRoutes: Routes = [
   providers: [
 
     { provide: AppConsts, useClass: AppConsts },
-    { provide: IPostsService, useClass: PostsService }
+    { provide: IPostsService, useClass: DummyPostsService }
 
   ],
   bootstrap: [AppComponent]

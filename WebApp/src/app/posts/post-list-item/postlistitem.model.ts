@@ -10,5 +10,7 @@ export interface PostListItem {
         name: string;
     }
     tags: Array<string>;
-    imageUrl: string;
+    brief: string;
+
+    subposts: Array<PostListItem>;
 }
