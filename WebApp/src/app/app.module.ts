@@ -14,11 +14,12 @@ import { postDetailsReducer } from './components/containers/posts/post-details/p
 
 //containers
 import { AppComponent } from './app.component';
-import { PostListComponent } from './components/containers/posts/post-list/postlist.component';
+import { PostListContainer } from './components/containers/posts/post-list/postlist.container';
 import { PostDetailsComponent } from './components/containers/posts/post-details/postdetails.component';
 
 //childs
 import { PostContentComponent } from './components/childs/posts/post-details/post-content/postcontent.component';
+import { PostListComponent } from './components/childs/posts/post-list/post-list/postlist.component';
 import { PostListItemComponent } from './components/childs/posts/post-list/post-list-item/postlistitem.component';
 
 //effects
@@ -33,14 +34,16 @@ import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
 
 const appRoutes: Routes = [
-  { path: '', component: PostListComponent },
+  { path: '', component: PostListContainer },
   { path: 'post', component: PostDetailsComponent },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 
 @NgModule({
   declarations: [
-    AppComponent, PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent
+    AppComponent, PostListContainer,
+    
+    PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent
   ],
   imports: [
     BrowserModule,

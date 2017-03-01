@@ -1,0 +1,5 @@
+<post-list 
+    [posts]="posts | async" 
+    (navigateToPostDetailsEvent)="navigateToPostDetails($event)"
+    (loadMorePostsEvent)="loadMorePosts($event)"
+></post-list>

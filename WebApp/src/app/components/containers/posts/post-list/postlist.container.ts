@@ -11,19 +11,18 @@ import * as postListActions from './postlist.actions';
 import { go, replace, search, show, back, forward } from '@ngrx/router-store';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'post-list',
-    templateUrl: 'postlist.component.html'
+  //  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'post-list-container',
+    templateUrl: 'postlist.container.html'
 })
-export class PostListComponent {
+export class PostListContainer {
     posts: Observable<PostListItem[]>
     
     navigateToPostDetails(postId: UUID) {
-        console.info(`Navigation to post ${postId} details.`);
         this._store.dispatch(go(['/post'], { id: postId }));
     }
 
-    more() {
+    loadMorePosts() {
         this._store.dispatch(new postListActions.LoadMorePosts({
             length: 5,
             startIndex: 15,
