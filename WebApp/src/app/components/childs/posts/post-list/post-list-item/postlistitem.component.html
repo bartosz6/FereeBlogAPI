@@ -1,0 +1,20 @@
+<div class="row white" (click)="details()">
+    <div class="col m12">
+        <p>{{post.brief}}...</p>
+
+        <div class="chip">
+            <img [src]="post.author.avatarUrl" class="circle responsive-img" *ngIf="showAvatar">
+            <span *ngIf="!!post.author">{{post.author.name}}</span>
+        </div>
+
+        <div class="chip right" *ngFor="let tag of post.tags">
+            <span>#{{tag}}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div *ngFor="let subpost of post.subposts" class="col m11 offset-m1">
+        <post-list-item [post]="subpost"></post-list-item>
+    </div>
+</div>

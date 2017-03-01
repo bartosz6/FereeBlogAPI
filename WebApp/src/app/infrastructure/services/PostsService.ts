@@ -1,5 +1,5 @@
 import { Http, Response, Request } from '@angular/http';
-import { PostListItem } from '../../posts/post-list-item/postlistitem.model';
+import { PostListItem } from '../../components/childs/posts/post-list/post-list-item/postlistitem.model';
 import { IPostsService } from './IPostsService';
 import { URLSearchParams, QueryEncoder, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';

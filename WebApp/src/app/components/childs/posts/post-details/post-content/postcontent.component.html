@@ -1,0 +1,23 @@
+<div class="card medium" >
+    <div class="card-image small" (click)="details()">
+        <img [src]="post.imageUrl" *ngIf="!!post.imageUrl">
+        <span class="card-title">
+            <h2>{{post.title}}</h2>
+        </span>
+    </div>
+    <div class="card-content">
+        <span>
+            {{post.content}}
+        </span>
+    </div>
+    <div class="card-action">
+        <div class="chip" *ngFor="let tag of post.tags">
+            <span>#{{tag}}</span>
+        </div>
+
+        <div class="chip right">
+            <img [src]="post.author.avatarUrl" *ngIf="!!post.author.avatarUrl" class="circle responsive-img" alt="{{post.author.name}}">
+            <span>{{post.author.name}}</span>
+        </div>
+    </div>
+</div>

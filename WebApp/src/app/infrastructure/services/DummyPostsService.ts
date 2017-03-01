@@ -1,5 +1,5 @@
 import { Http, Response, Request } from '@angular/http';
-import { PostListItem } from '../../posts/post-list-item/postlistitem.model';
+import { PostListItem } from '../../components/childs/posts/post-list/post-list-item/postlistitem.model';
 import { IPostsService } from './IPostsService';
 import { URLSearchParams, QueryEncoder, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,7 +19,7 @@ export class DummyPostsService implements IPostsService {
                 title: 'post 1',
                 date: new Date(),
                 author: {
-                    avatarUrl: null,
+                    avatarUrl: 'https://pbs.twimg.com/profile_images/609305830534590464/LqHVEN6X.jpg',
                     name: 'test user 1',
                 },
                 tags: ['tag1', 'tag2'],
@@ -30,7 +30,7 @@ export class DummyPostsService implements IPostsService {
                         title: 'sub post 1',
                         date: new Date(),
                         author: {
-                            avatarUrl: null,
+                            avatarUrl: 'https://pbs.twimg.com/profile_images/609305830534590464/LqHVEN6X.jpg',
                             name: 'test user 2',
                         },
                         tags: ['tag3'],
@@ -43,7 +43,7 @@ export class DummyPostsService implements IPostsService {
                         title: 'sub post 2',
                         date: new Date(),
                         author: {
-                            avatarUrl: null,
+                            avatarUrl: 'https://pbs.twimg.com/profile_images/609305830534590464/LqHVEN6X.jpg',
                             name: 'test user 3',
                         },
                         tags: [],
@@ -58,7 +58,7 @@ export class DummyPostsService implements IPostsService {
                 title: 'post 2',
                 date: new Date(),
                 author: {
-                    avatarUrl: null,
+                    avatarUrl: 'https://pbs.twimg.com/profile_images/609305830534590464/LqHVEN6X.jpg',
                     name: 'test user 5',
                 },
                 tags: [],
