@@ -6,31 +6,66 @@ import { AppState } from '../../../../app.reducer';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/count';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/observable/combineLatest';
 import * as postListReducer from './postlist.reducer';
 import * as postListActions from './postlist.actions';
 import { go, replace, search, show, back, forward } from '@ngrx/router-store';
 
 @Component({
-  //  changeDetection: ChangeDetectionStrategy.OnPush,
+    //  changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'post-list-container',
     templateUrl: 'postlist.container.html'
 })
 export class PostListContainer {
-    posts: Observable<PostListItem[]>
-    
+    posts: Observable<PostListItem[]>;
+    tag: Observable<string>;
+
+    renderedPostsCount: number;
+    currentTag: string;
+
     navigateToPostDetails(postId: UUID) {
         this._store.dispatch(go(['/post'], { id: postId }));
     }
 
-    loadMorePosts() {
-        this._store.dispatch(new postListActions.LoadMorePosts({
-            length: 5,
-            startIndex: 15,
-            tag: ""
-        }));
+    navigateToTag(tag: string) {
+        this._store.dispatch(go([`/blog/${tag}`]));
     }
 
-    constructor(private _store: Store<AppState>) { 
+    loadMorePosts() {
+        this._store.dispatch(
+            new postListActions.LoadMorePosts({
+                startIndex: this.renderedPostsCount,
+                tag: this.currentTag,
+                length: 1
+            })
+        );
+    }
+
+//todo: add action switch tag - replace current list
+    switchTag() {
+        this._store.dispatch(
+            new postListActions.LoadMorePosts({
+                startIndex: 0,
+                tag: this.currentTag,
+                length: 1
+            })
+        );
+    }
+
+    constructor(private _store: Store<AppState>) {
         this.posts = _store.select(a => a.postList).let(postListReducer.getPosts);
+        this.tag = _store.select(a => a.router).map(routerState => {
+            let pathParts = routerState.path.split('/');
+            return pathParts[pathParts.length - 1];
+        });
+
+        this.posts.skip(0).subscribe(c => this.renderedPostsCount = c.length);
+        
+        this.tag.skip(1).subscribe(t => {
+            this.currentTag = t;
+            this.switchTag();
+        });
     }
 }

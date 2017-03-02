@@ -26,7 +26,6 @@ export function postListReducer(state = initialState, action: Action): PostListS
             let s = Object.assign({}, state, {
                 posts: [...state.posts, ...payload.posts]
             });
-            console.log(s);
             return s;
         }
         case actions.ActionTypes.LOAD_MORE_POSTS_ERROR:

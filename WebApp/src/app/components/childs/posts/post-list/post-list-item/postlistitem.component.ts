@@ -9,6 +9,11 @@ import {PostListItem} from './postlistitem.model';
 export class PostListItemComponent {
     @Input() post: PostListItem;
     @Output() detailsEvent = new EventEmitter();
+    @Output() tagEvent = new EventEmitter();
+
+    get isRoot() : boolean {
+        return !this.post.parentId || this.post.parentId === null;
+    }
 
     get showAvatar() : boolean {
         let result = !!this.post && !!this.post.author && !!this.post.author.avatarUrl;
@@ -17,6 +22,10 @@ export class PostListItemComponent {
 
     details() {
         this.detailsEvent.emit(this.post.id);
+    }
+
+    goToTag(name) {
+        this.tagEvent.emit(name);
     }
 
     constructor() { }

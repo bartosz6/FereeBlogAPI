@@ -13,9 +13,10 @@ export class DummyPostsService implements IPostsService {
     ) { }
 
     getPosts(query: any): Observable<PostListItem[]> {
-        let posts = [
+        let id1 = new UUID();
+        let posts: PostListItem[] = [
             {
-                id: new UUID(),
+                id: id1,
                 title: 'post 1',
                 date: new Date(),
                 author: {
@@ -27,6 +28,7 @@ export class DummyPostsService implements IPostsService {
                 subposts: [
                     {
                         id: new UUID(),
+                        parentId: id1,
                         title: 'sub post 1',
                         date: new Date(),
                         author: {
@@ -40,6 +42,7 @@ export class DummyPostsService implements IPostsService {
                     },
                     {
                         id: new UUID(),
+                        parentId: id1,
                         title: 'sub post 2',
                         date: new Date(),
                         author: {
@@ -67,6 +70,17 @@ export class DummyPostsService implements IPostsService {
                 ]
             }
         ];
+        console.log("query: ", query);
+        posts = !!query && !!query.tag && query.tag.length > 0 
+                ? 
+                posts.filter(a => !!a.tags.find(t => t == query.tag)) 
+                : 
+                posts;
+
+        posts = posts.slice(query.startIndex, query.startIndex+query.length);
+
+        if(posts.length === 0) throw "nie ma wiecej postow";
+
         return Observable.of(posts);
     }
 }

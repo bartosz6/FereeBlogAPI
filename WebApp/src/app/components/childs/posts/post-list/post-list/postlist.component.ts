@@ -7,13 +7,15 @@ import { UUID } from 'angular2-uuid';
     selector: 'post-list',
     templateUrl: 'postlist.component.html'
 })
-export class PostListComponent implements OnInit {
+export class PostListComponent {
     @Input() posts: PostListItem[];
-    
+    @Input() currentTag: string;
+
     @Output() navigateToPostDetailsEvent = new EventEmitter();
     @Output() loadMorePostsEvent = new EventEmitter();
+    @Output() navigateToTagEvent = new EventEmitter();
 
-    loadMorePosts(){
+    loadMorePosts() {
         this.loadMorePostsEvent.emit();
     }
 
@@ -21,11 +23,10 @@ export class PostListComponent implements OnInit {
         this.navigateToPostDetailsEvent.emit(data);
     }
 
-    ngOnInit() {
-        if(!!this.posts && this.posts.length === 0)
-            this.loadMorePostsEvent.emit();
+    navigateToTag(tag) {
+        this.navigateToTagEvent.emit(tag);
     }
 
-    constructor() { 
+    constructor() {
     }
 }

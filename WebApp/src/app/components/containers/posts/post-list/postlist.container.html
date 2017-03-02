@@ -1,5 +1,8 @@
 <post-list 
     [posts]="posts | async" 
+    [currentTag]="tag | async"
     (navigateToPostDetailsEvent)="navigateToPostDetails($event)"
     (loadMorePostsEvent)="loadMorePosts($event)"
+    (navigateToTagEvent)="navigateToTag($event)"
 ></post-list>
+

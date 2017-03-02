@@ -1,30 +1,23 @@
-<div class="row" >
-    <div class="col m12">
-        <div class="card">
-            <div class="card-image">
-                <img src="http://materializecss.com/images/sample-1.jpg">
-                <span class="card-title">Card Title</span>
-                <a (click)="details()" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-            </div>
-            <div class="card-content">
-                <p>{{post.brief}}...</p>
-            </div>
-            <div class="card-action">
-                <div class="chip">
-                    <img [src]="post.author.avatarUrl" class="circle responsive-img" *ngIf="showAvatar">
-                    <span *ngIf="!!post.author">{{post.author.name}}</span>
-                </div>
+<div class="row">
+    <div class="col m12" >
 
-                <div class="chip right" *ngFor="let tag of post.tags">
-                    <span>#{{tag}}</span>
-                </div>
-            </div>
+        <p (click)="details()">{{post.brief}}...</p>
+
+        <div class="chip">
+            <img [src]="post.author.avatarUrl" class="circle responsive-img" *ngIf="showAvatar">
+            <span *ngIf="!!post.author">{{post.author.name}}</span>
         </div>
+
+        <div class="chip right" *ngFor="let tag of post.tags" (click)="goToTag(tag)">
+            <span>#{{tag}}</span>
+        </div>
+
     </div>
 </div>
-
 <div class="row">
     <div *ngFor="let subpost of post.subposts" class="col m11 offset-m1">
         <post-list-item [post]="subpost"></post-list-item>
     </div>
 </div>
+
+<hr *ngIf="isRoot"/>

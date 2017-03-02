@@ -34,9 +34,9 @@ import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
 
 const appRoutes: Routes = [
-  { path: '', component: PostListContainer },
+  { path: 'blog/:tag', component: PostListContainer },
   { path: 'post', component: PostDetailsComponent },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: '**', redirectTo: 'blog/', pathMatch: 'full' }
 ];
 
 @NgModule({
