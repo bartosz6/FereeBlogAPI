@@ -9,7 +9,9 @@ export const ActionTypes = {
 
     FILTER_LIST: 'FILTER_LIST',
     FILTER_LIST_OK: 'FILTER_LIST_OK',
-    FILTER_LIST_ERROR: 'FILTER_LIST_ERROR'
+    FILTER_LIST_ERROR: 'FILTER_LIST_ERROR',
+
+    SWITCH_TAG: 'SWITCH_TAG'
 }
 
 export interface LoadMorePostsModel {
@@ -38,6 +40,10 @@ export interface FilterListOkModel {
 
 export interface FilterListErrorModel {
     message: any;
+}
+
+export interface SwitchTagModel {
+    tag: string;
 }
 
 export class LoadMorePosts implements Action {
@@ -69,4 +75,8 @@ export class FilterListError implements Action {
     constructor(public payload: FilterListOkModel) {};
 }
 
+export class SwitchTag implements Action {
+    type = ActionTypes.SWITCH_TAG;
+    constructor(public payload: SwitchTagModel) {};
+}
 

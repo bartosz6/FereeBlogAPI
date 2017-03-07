@@ -43,8 +43,14 @@ export class PostListContainer {
         );
     }
 
-//todo: add action switch tag - replace current list
+    //todo: add action switch tag - replace current list
+    // switch tag should clear the list and switch tag, then call load more posts
     switchTag() {
+        this._store.dispatch(
+            new postListActions.SwitchTag({
+                tag: this.currentTag
+            })
+        );
         this._store.dispatch(
             new postListActions.LoadMorePosts({
                 startIndex: 0,
@@ -61,11 +67,17 @@ export class PostListContainer {
             return pathParts[pathParts.length - 1];
         });
 
-        this.posts.skip(0).subscribe(c => this.renderedPostsCount = c.length);
-        
+        _store.select(a=>a.postList).let(postListReducer.getPostCount).subscribe(c => {
+            this.renderedPostsCount = c;
+            console.log(c);
+        });
+
         this.tag.skip(1).subscribe(t => {
+            console.info(`Switching to: ${t}`);
             this.currentTag = t;
             this.switchTag();
         });
+
+        //dorobic getTag do reducera i subscribe
     }
 }
