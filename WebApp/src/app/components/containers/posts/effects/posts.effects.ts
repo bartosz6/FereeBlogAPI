@@ -20,13 +20,12 @@ export class PostsEffects {
         .map(action => action.payload)
         .switchMap(payload => this.postsService.getPosts(payload))
         .map(result => new postListActions.LoadMorePostsOk({
-            posts: result
+            posts: result.posts,
+            hasMoreItems: result.hasMoreItems
         }))
         .catch(ex => {
-            console.warn(ex);
-
             return Observable.of(new postListActions.LoadMorePostsError({
-                message: "Cannot get more posts"
+                message: ex
             }))
-        })
+        });
 }

@@ -9,11 +9,13 @@ import { Action } from '@ngrx/store';
 export interface PostListState {
     posts: Array<PostListItem>;
     currentTag: string;
+    hasMoreItems: boolean;
 }
 
 const initialState: PostListState = {
     posts: [],
-    currentTag: ''
+    currentTag: '',
+    hasMoreItems: true
 }
 
 export function postListReducer(state = initialState, action: Action): PostListState {
@@ -23,7 +25,8 @@ export function postListReducer(state = initialState, action: Action): PostListS
                 const payload: actions.SwitchTagModel = action.payload;
                 return Object.assign({}, state, {
                     currentTag: payload.tag,
-                    posts: []
+                    posts: [],
+                    hasMoreItems: true
                 });
             }
         case actions.ActionTypes.LOAD_MORE_POSTS:
@@ -33,13 +36,16 @@ export function postListReducer(state = initialState, action: Action): PostListS
         case actions.ActionTypes.LOAD_MORE_POSTS_OK:
             {
                 const payload: actions.LoadMorePostsOkModel = action.payload;
-                let s = Object.assign({}, state, {
-                    posts: [...state.posts, ...payload.posts]
+
+                console.log(payload);
+                return Object.assign({}, state, {
+                    posts: [...state.posts, ...payload.posts],
+                    hasMoreItems: payload.hasMoreItems
                 });
-                return s;
             }
         case actions.ActionTypes.LOAD_MORE_POSTS_ERROR:
             {
+                console.info(action.payload.message);
                 return state;
             }
         case actions.ActionTypes.FILTER_LIST:
@@ -75,4 +81,8 @@ export function getCurrentTag(state$: Observable<PostListState>) {
 
 export function getPostCount(state$: Observable<PostListState>) {
     return state$.select(state => state.posts.length);
+}
+
+export function getHasMoreItems(state$: Observable<PostListState>) {
+    return state$.select(state => state.hasMoreItems);
 }

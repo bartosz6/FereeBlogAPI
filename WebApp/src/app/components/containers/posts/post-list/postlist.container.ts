@@ -21,9 +21,7 @@ import { go, replace, search, show, back, forward } from '@ngrx/router-store';
 export class PostListContainer {
     posts: Observable<PostListItem[]>;
     tag: Observable<string>;
-
-    renderedPostsCount: number;
-    currentTag: string;
+    hasMoreItems: Observable<boolean>;
 
     navigateToPostDetails(postId: UUID) {
         this._store.dispatch(go(['/post'], { id: postId }));
@@ -33,11 +31,11 @@ export class PostListContainer {
         this._store.dispatch(go([`/blog/${tag}`]));
     }
 
-    loadMorePosts() {
+    loadMorePosts(request) {
         this._store.dispatch(
             new postListActions.LoadMorePosts({
-                startIndex: this.renderedPostsCount,
-                tag: this.currentTag,
+                startIndex: request.startIndex,
+                tag: request.tag,
                 length: 1
             })
         );
@@ -45,16 +43,16 @@ export class PostListContainer {
 
     //todo: add action switch tag - replace current list
     // switch tag should clear the list and switch tag, then call load more posts
-    switchTag() {
+    switchTag(tag) {
         this._store.dispatch(
             new postListActions.SwitchTag({
-                tag: this.currentTag
+                tag
             })
         );
         this._store.dispatch(
             new postListActions.LoadMorePosts({
                 startIndex: 0,
-                tag: this.currentTag,
+                tag,
                 length: 1
             })
         );
@@ -67,17 +65,11 @@ export class PostListContainer {
             return pathParts[pathParts.length - 1];
         });
 
-        _store.select(a=>a.postList).let(postListReducer.getPostCount).subscribe(c => {
-            this.renderedPostsCount = c;
-            console.log(c);
+        this.tag.skip(1).subscribe(tag => {
+            console.info(`Switching to: ${tag}`);
+            this.switchTag(tag);
         });
 
-        this.tag.skip(1).subscribe(t => {
-            console.info(`Switching to: ${t}`);
-            this.currentTag = t;
-            this.switchTag();
-        });
-
-        //dorobic getTag do reducera i subscribe
+        this.hasMoreItems = _store.select(a => a.postList).let(postListReducer.getHasMoreItems);
     }
 }

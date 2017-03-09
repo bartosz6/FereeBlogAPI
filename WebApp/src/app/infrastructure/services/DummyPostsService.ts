@@ -12,7 +12,7 @@ export class DummyPostsService implements IPostsService {
     constructor(
     ) { }
 
-    getPosts(query: any): Observable<PostListItem[]> {
+    getPosts(query: any): Observable<any> {
         let id1 = new UUID();
         let posts: PostListItem[] = [
             {
@@ -70,18 +70,18 @@ export class DummyPostsService implements IPostsService {
                 ]
             }
         ];
-        console.log("query: ", query);
-        posts = !!query && !!query.tag && query.tag.length > 0 
-                ? 
-                posts.filter(a => !!a.tags.find(t => t == query.tag)) 
-                : 
-                posts;
+        posts = !!query && !!query.tag && query.tag.length > 0
+            ?
+            posts.filter(a => !!a.tags.find(t => t == query.tag))
+            :
+            posts;
 
-        posts = posts.slice(query.startIndex, query.startIndex+query.length);
+        posts = posts.slice(query.startIndex, query.startIndex + query.length + 1);
+        let hasMoreItems = posts.length > query.length;
+        if (hasMoreItems === true)
+            posts = posts.slice(0, posts.length - 1);
 
-        if(posts.length === 0) throw "nie ma wiecej postow";
-
-        return Observable.of(posts);
+        return Observable.of({ posts, hasMoreItems });
     }
 }
 

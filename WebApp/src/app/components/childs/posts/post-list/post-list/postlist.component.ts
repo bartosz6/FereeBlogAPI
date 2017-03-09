@@ -10,13 +10,18 @@ import { UUID } from 'angular2-uuid';
 export class PostListComponent {
     @Input() posts: PostListItem[];
     @Input() currentTag: string;
+    @Input() hasMoreItems: boolean;
 
     @Output() navigateToPostDetailsEvent = new EventEmitter();
     @Output() loadMorePostsEvent = new EventEmitter();
     @Output() navigateToTagEvent = new EventEmitter();
 
     loadMorePosts() {
-        this.loadMorePostsEvent.emit();
+        if (this.hasMoreItems)
+            this.loadMorePostsEvent.emit({
+                tag: this.currentTag,
+                startIndex: this.posts.length
+            });
     }
 
     navigateToPostDetails(data) {

@@ -2,5 +2,5 @@ import { PostListItem } from '../../components/childs/posts/post-list/post-list-
 import { Observable } from 'rxjs/Observable';
 
 export abstract class IPostsService {
-    getPosts(query: any) : Observable<PostListItem[]> { return }
+    getPosts(query: any) : Observable<any> { return }
 }

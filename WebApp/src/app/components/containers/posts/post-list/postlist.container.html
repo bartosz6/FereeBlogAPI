@@ -1,6 +1,7 @@
 <post-list 
     [posts]="posts | async" 
     [currentTag]="tag | async"
+    [hasMoreItems]="hasMoreItems | async"
     (navigateToPostDetailsEvent)="navigateToPostDetails($event)"
     (loadMorePostsEvent)="loadMorePosts($event)"
     (navigateToTagEvent)="navigateToTag($event)"

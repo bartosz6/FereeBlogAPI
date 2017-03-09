@@ -21,6 +21,7 @@ export interface LoadMorePostsModel {
 }
 
 export interface LoadMorePostsOkModel {
+    hasMoreItems: boolean;
     posts: Array<PostListItem>;
 }
 
