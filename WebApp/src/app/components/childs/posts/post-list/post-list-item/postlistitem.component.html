@@ -16,7 +16,7 @@
 </div>
 <div class="row">
     <div *ngFor="let subpost of post.subposts" class="col m11 offset-m1">
-        <post-list-item [post]="subpost"></post-list-item>
+        <post-list-item [post]="subpost" (detailsEvent)="details($event)" (tagEvent)="goToTag($event)"></post-list-item>
     </div>
 </div>
 
