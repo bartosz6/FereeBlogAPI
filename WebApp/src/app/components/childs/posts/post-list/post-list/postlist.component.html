@@ -1,0 +1,19 @@
+<div class="row" *ngIf="!!currentTag">
+    <div class="col m12">
+        <h2>#{{currentTag}}</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col m12">
+        <!--post-->
+        <div *ngFor="let post of posts">
+            <post-list-item [post]="post" (detailsEvent)="navigateToPostDetails($event)" (tagEvent)="navigateToTag($event)"></post-list-item>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col m12 center-align">
+        <button (click)="loadMorePosts()" class="btn-floating btn-large red" *ngIf="hasMoreItems">more</button>
+    </div>
+</div>

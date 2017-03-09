@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col m12" >
+
+        <p (click)="details()">{{post.brief}}...</p>
+
+        <div class="chip">
+            <img [src]="post.author.avatarUrl" class="circle responsive-img" *ngIf="showAvatar">
+            <span *ngIf="!!post.author">{{post.author.name}}</span>
+        </div>
+
+        <div class="chip right" *ngFor="let tag of post.tags" (click)="goToTag(tag)">
+            <span>#{{tag}}</span>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div *ngFor="let subpost of post.subposts" class="col m11 offset-m1">
+        <post-list-item [post]="subpost" (detailsEvent)="details($event)" (tagEvent)="goToTag($event)"></post-list-item>
+    </div>
+</div>
+
+<hr *ngIf="isRoot"/>

@@ -6,34 +6,44 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { routerReducer, RouterStoreModule } from '@ngrx/router-store';
 import { RouterModule, Routes } from '@angular/router';
-
-import { postListReducer } from './posts/post-list/postlist.reducer';
-import { postDetailsReducer } from './posts/post-details/postdetails.reducer'
-
-import { AppComponent } from './app.component';
-import { PostListItemComponent } from './posts/post-list-item/postlistitem.component';
-import { PostListComponent } from './posts/post-list/postlist.component';
-import { PostDetailsComponent } from './posts/post-details/postdetails.component';
-import { PostContentComponent } from './posts/post-content/postcontent.component';
-
 import { EffectsModule } from '@ngrx/effects';
-import { PostsEffects } from './posts/effects/posts.effects';
 
+//reducers
+import { postListReducer } from './components/containers/posts/post-list/postlist.reducer';
+import { postDetailsReducer } from './components/containers/posts/post-details/postdetails.reducer'
+
+//containers
+import { AppComponent } from './app.component';
+import { PostListContainer } from './components/containers/posts/post-list/postlist.container';
+import { PostDetailsComponent } from './components/containers/posts/post-details/postdetails.component';
+
+//childs
+import { PostContentComponent } from './components/childs/posts/post-details/post-content/postcontent.component';
+import { PostListComponent } from './components/childs/posts/post-list/post-list/postlist.component';
+import { PostListItemComponent } from './components/childs/posts/post-list/post-list-item/postlistitem.component';
+
+//effects
+import { PostsEffects } from './components/containers/posts/effects/posts.effects';
+
+//common
 import { AppConsts } from './app.consts';
-import { QueryHelper } from './common/helpers/query.helper';
 
+//services
 import { PostsService } from './infrastructure/services/PostsService';
+import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
 
 const appRoutes: Routes = [
-  { path: '', component: PostListComponent },
+  { path: 'blog/:tag', component: PostListContainer },
   { path: 'post', component: PostDetailsComponent },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: '**', redirectTo: 'blog/', pathMatch: 'full' }
 ];
 
 @NgModule({
   declarations: [
-    AppComponent, PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent
+    AppComponent, PostListContainer,
+    
+    PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +63,7 @@ const appRoutes: Routes = [
   providers: [
 
     { provide: AppConsts, useClass: AppConsts },
-    { provide: IPostsService, useClass: PostsService }
+    { provide: IPostsService, useClass: DummyPostsService }
 
   ],
   bootstrap: [AppComponent]
