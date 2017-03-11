@@ -13,7 +13,7 @@ export class DummyPostsService implements IPostsService {
     ) { }
 
     getPosts(query: any): Observable<any> {
-        let id1 = new UUID();
+        let id1 = UUID.UUID();
         let posts: PostListItem[] = [
             {
                 id: id1,
@@ -27,7 +27,7 @@ export class DummyPostsService implements IPostsService {
                 brief: 'lorem ipsum dolor sit amet',
                 subposts: [
                     {
-                        id: new UUID(),
+                        id: UUID.UUID(),
                         parentId: id1,
                         title: 'sub post 1',
                         date: new Date(),
@@ -41,7 +41,7 @@ export class DummyPostsService implements IPostsService {
                         ]
                     },
                     {
-                        id: new UUID(),
+                        id: UUID.UUID(),
                         parentId: id1,
                         title: 'sub post 2',
                         date: new Date(),
@@ -57,7 +57,7 @@ export class DummyPostsService implements IPostsService {
                 ]
             },
             {
-                id: new UUID(),
+                id: UUID.UUID(),
                 title: 'post 2',
                 date: new Date(),
                 author: {

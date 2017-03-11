@@ -3,6 +3,8 @@
         <h2>#{{currentTag}}</h2>
     </div>
 </div>
+
+
 <div class="row">
     <div class="col m12">
         <!--post-->
@@ -10,6 +12,9 @@
             <post-list-item [post]="post" (detailsEvent)="navigateToPostDetails($event)" (tagEvent)="navigateToTag($event)"></post-list-item>
         </div>
 
+        <div *ngIf="posts.length === 0">
+            <h4>No posts here :(</h4>
+        </div>
     </div>
 </div>
 <div class="row">

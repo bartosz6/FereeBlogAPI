@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
 import { PostListItem } from '../../../childs/posts/post-list/post-list-item/postlistitem.model';
 import { UUID } from 'angular2-uuid';
 import { State, Store } from "@ngrx/store";
 import { AppState } from '../../../../app.reducer';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/count';
@@ -18,12 +19,13 @@ import { go, replace, search, show, back, forward } from '@ngrx/router-store';
     selector: 'post-list-container',
     templateUrl: 'postlist.container.html'
 })
-export class PostListContainer {
+export class PostListContainer implements OnInit, OnDestroy {
     posts: Observable<PostListItem[]>;
     tag: Observable<string>;
     hasMoreItems: Observable<boolean>;
 
     navigateToPostDetails(postId: UUID) {
+        console.log(postId.toString());
         this._store.dispatch(go(['/post'], { id: postId }));
     }
 
@@ -41,8 +43,6 @@ export class PostListContainer {
         );
     }
 
-    //todo: add action switch tag - replace current list
-    // switch tag should clear the list and switch tag, then call load more posts
     switchTag(tag) {
         this._store.dispatch(
             new postListActions.SwitchTag({
@@ -58,18 +58,24 @@ export class PostListContainer {
         );
     }
 
-    constructor(private _store: Store<AppState>) {
+
+    private tag$ : any;
+    private currentTag: string;
+    ngOnInit() {
+        this.tag$ = this._route.params.subscribe(params => {
+            this.switchTag(params['tag']);
+        });
+    }
+
+    ngOnDestroy() {
+        this.tag$.unsubscribe();
+    }
+
+    constructor(
+        private _store: Store<AppState>, 
+        private _route: ActivatedRoute) {
         this.posts = _store.select(a => a.postList).let(postListReducer.getPosts);
-        this.tag = _store.select(a => a.router).map(routerState => {
-            let pathParts = routerState.path.split('/');
-            return pathParts[pathParts.length - 1];
-        });
-
-        this.tag.skip(1).subscribe(tag => {
-            console.info(`Switching to: ${tag}`);
-            this.switchTag(tag);
-        });
-
         this.hasMoreItems = _store.select(a => a.postList).let(postListReducer.getHasMoreItems);
+        this.tag = _store.select(a => a.postList).let(postListReducer.getCurrentTag);
     }
 }
