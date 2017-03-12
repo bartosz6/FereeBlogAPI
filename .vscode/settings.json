@@ -4,6 +4,7 @@
         "**/.*": true,
         "**/bin": true,
         "**/obj": true,
-        "**/*.lock.*": true
+        "**/*.lock.*": true,
+	"**/node_modules" :true
     }
 }
