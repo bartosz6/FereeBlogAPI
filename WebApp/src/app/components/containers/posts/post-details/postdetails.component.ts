@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/let';
 import 'rxjs/add/operator/map';
 import { PostContent } from '../../../childs/posts/post-details/post-content/postcontent.model';
- import * as postListReducer from './postdetails.reducer';
+ import * as postDetailsReducer from './postdetails.reducer';
 import { go, replace, search, show, back, forward } from '@ngrx/router-store';
 
 @Component({
@@ -23,6 +23,6 @@ export class PostDetailsComponent {
     }
 
     constructor(private _store: Store<AppState>) { 
-        this.post = _store.select(a => a.postDetails).let(postListReducer.getPost);
+        this.post = _store.select(a => a.postDetails).let(postDetailsReducer.getPost);
     }
 }
