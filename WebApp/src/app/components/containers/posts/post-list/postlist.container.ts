@@ -25,7 +25,6 @@ export class PostListContainer implements OnInit, OnDestroy {
     hasMoreItems: Observable<boolean>;
 
     navigateToPostDetails(postId: UUID) {
-        console.log(postId.toString());
         this._store.dispatch(go(['/post'], { id: postId }));
     }
 
