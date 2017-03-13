@@ -7,6 +7,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { routerReducer, RouterStoreModule } from '@ngrx/router-store';
 import { RouterModule, Routes } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
+import { AuthHttp } from 'angular2-jwt';
 
 //reducers
 import { postListReducer } from './components/containers/posts/post-list/postlist.reducer';
@@ -35,9 +36,11 @@ import { AppConsts } from './app.consts';
 import { PostsService } from './infrastructure/services/PostsService';
 import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
+import { AuthGuard } from './infrastructure/auth/auth.guard';
 
 const appRoutes: Routes = [
   { path: 'blog/:tag', component: PostListContainer },
+  { path: 'secured', component: PostListContainer, canActivate: [AuthGuard] },
   { path: 'post', component: PostDetailsComponent },
   { path: 'login', component: LoginContainer },
   { path: '**', redirectTo: 'blog/', pathMatch: 'full' }
@@ -67,7 +70,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule
   ],
   providers: [
-
+    { provide: AuthGuard, useClass: AuthGuard },
+    { provide: AuthHttp, useClass: AuthHttp },
     { provide: AppConsts, useClass: AppConsts },
     { provide: IPostsService, useClass: DummyPostsService }
 

@@ -32,8 +32,8 @@ export class LoginContainer {
     constructor(
         private _store: Store<AppState>, 
         private _route: ActivatedRoute) {
-            this._route.params.subscribe(params => {
-                this.returnUrl = params['returnUrl'];
-            });
+            // this._route.queryParams.subscribe(params => {
+            //     this.returnUrl = params['returnUrl'];
+            // });
     }
 }

@@ -19,15 +19,20 @@ const initialState: LoginState = {
 
 export function loginReducer(state = initialState, action: Action): LoginState {
     switch (action.type) {
-        case actions.ActionTypes.USER_LOG_IN:
-            {
-                const payload: actions.UserLoginModel = action.payload;
-                return Object.assign({}, state, {
-                    returnUrl: payload.returnUrl,
-                    login: payload.login,
-                    isLoggedIn: true
-                });
-            }
+        case actions.ActionTypes.USER_LOG_IN: {
+            const payload: actions.UserLoginModel = action.payload;
+            return Object.assign({}, state, {
+                returnUrl: payload.returnUrl,
+                login: payload.login,
+                isLoggedIn: true
+            });
+        }
+        case actions.ActionTypes.SET_RETURN_URL: {
+            const payload: actions.SetReturnUrlModel = action.payload;
+            return Object.assign({}, state, {
+                returnUrl: payload.returnUrl
+            });
+        }
         default:
             return state;
     }
