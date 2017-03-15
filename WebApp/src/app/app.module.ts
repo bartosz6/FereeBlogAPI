@@ -21,6 +21,7 @@ import { PostDetailsComponent } from './components/containers/posts/post-details
 import { LoginContainer } from './components/containers/user/login/login.container';
 
 //childs
+import { SimpleInputComponent } from './components/childs/common/input/simpleinput.component';
 import { PostContentComponent } from './components/childs/posts/post-details/post-content/postcontent.component';
 import { PostListComponent } from './components/childs/posts/post-list/post-list/postlist.component';
 import { PostListItemComponent } from './components/childs/posts/post-list/post-list-item/postlistitem.component';
@@ -50,7 +51,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent, PostListContainer, LoginContainer,
     
-    PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent, LoginPanelComponent
+    PostListComponent, PostListItemComponent, PostDetailsComponent, PostContentComponent, LoginPanelComponent, SimpleInputComponent
   ],
   imports: [
     BrowserModule,
