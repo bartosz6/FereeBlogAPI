@@ -17,6 +17,12 @@ export class SimpleInputComponent {
     get control(): AbstractControl {
         return this.form.controls[this.name];
     }
+    get isTouched(): boolean {
+        return this.control.touched;
+    }
+    get isValid(): boolean {
+        return this.control.touched && this.control.valid;
+    }
     get isInvalid(): boolean {
         return this.control.touched && !this.control.valid;
     }

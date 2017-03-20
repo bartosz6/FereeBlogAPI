@@ -1,6 +1,6 @@
 <div class="input-field" [formGroup]="form">
     <i class="material-icons prefix" *ngIf="hasIcon">{{icon}}</i>
-    <input [ngClass]="{'valid' : !isInvalid, 'invalid': isInvalid}" [attr.name]="name" [attr.id]="name" type="{{type}}" formControlName="{{name}}">
+    <input [ngClass]="{'valid' : isValid, 'invalid': isInvalid}" [attr.name]="name" [attr.id]="name" type="{{type}}" formControlName="{{name}}">
     <label [attr.for]="name">{{placeholder}}</label> 
     <span *ngIf="isInvalid" class="validation-error">{{firstError}}</span>
 </div>
