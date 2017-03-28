@@ -10,6 +10,7 @@
       "type": "platform"
     },
     "Autofac": "4.2.1",
+    "Microsoft.AspNetCore.Authentication.JwtBearer" : "1.1.0-*",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Microsoft.AspNetCore.Authorization": "1.0.0",
     "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "1.0.0",

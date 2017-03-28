@@ -4,6 +4,7 @@
         "Web",
         "Infrastructure",
         "Application",
+        "SSO",
         
         "DomainTests"
     ]

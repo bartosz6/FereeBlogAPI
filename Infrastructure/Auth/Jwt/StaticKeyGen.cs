@@ -2,7 +2,7 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Web.Jwt
+namespace Infrastructure.Auth.Jwt
 {
     
     public class StaticKeyGen: IKeyGen

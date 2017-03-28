@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 
-namespace Web.Jwt
+namespace Infrastructure.Auth.Jwt
 {
     public class TokenAuthOptions
     {

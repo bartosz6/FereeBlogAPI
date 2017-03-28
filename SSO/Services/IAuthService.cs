@@ -1,6 +1,6 @@
-using Domain.User;
+using WebApplication.Models;
 
-namespace Web.Services
+namespace Sso.Services
 {
     public interface IAuthService
     {

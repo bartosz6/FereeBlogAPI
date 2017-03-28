@@ -1,10 +1,10 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Domain.User;
-using Web.Jwt;
+using WebApplication.Models;
+using Infrastructure.Auth.Jwt;
 
-namespace Web.Services
+namespace Sso.Services
 {
     public class AuthService : IAuthService
     {
