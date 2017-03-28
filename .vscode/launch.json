@@ -9,7 +9,10 @@
             "args": [],
             "cwd": "${workspaceRoot}/Web",
             "stopAtEntry": false,
-            "externalConsole": false
+            "externalConsole": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
         },
         {
             "name": "SSO",
