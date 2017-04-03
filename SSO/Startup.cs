@@ -149,6 +149,8 @@ namespace WebApplication
                 app.UseBrowserLink();
             }
 
+            app.UseDeveloperExceptionPage();
+
             app.UseStaticFiles();
 
             app.UseIdentity();
