@@ -144,12 +144,11 @@ namespace WebApplication
 
             if (env.IsDevelopment())
             {
-                //app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();
                 //app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
 
-            app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
 
