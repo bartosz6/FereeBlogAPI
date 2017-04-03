@@ -68,7 +68,7 @@ namespace WebApplication
             );
 
             // Add framework services.
-            var connectionString = Configuration["ConnectionString"];
+            var connectionString = Configuration.GetConnectionString("sql");
             if(connectionString == null) throw new ArgumentException("no connection string");
 
             services.AddDbContext<ApplicationDbContext>(options =>
