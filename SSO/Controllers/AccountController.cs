@@ -49,10 +49,11 @@ namespace WebApplication.Controllers
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
                     var newToken = _authService.GetTokenForUser(user);
-                    return newToken;
+                    return Json(newToken);
                 }
             }
-            return Unauthorized();
+            
+            return BadRequest(ModelState);
         }
 
         [HttpPost]

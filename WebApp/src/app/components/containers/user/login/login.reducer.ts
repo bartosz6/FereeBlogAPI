@@ -23,8 +23,23 @@ export function loginReducer(state = initialState, action: Action): LoginState {
             const payload: actions.UserLoginModel = action.payload;
             return Object.assign({}, state, {
                 returnUrl: payload.returnUrl,
-                login: payload.login,
+                login: payload.login
+            });
+        }
+        case actions.ActionTypes.USER_LOG_IN_OK: {
+            const payload: actions.UserLoginOkModel = action.payload;
+            
+            console.log(payload);
+            return Object.assign({}, state, {
                 isLoggedIn: true
+            });
+        }
+        case actions.ActionTypes.USER_LOG_IN_ERROR: {
+            const payload: actions.UserLoginErrorModel = action.payload;
+
+            console.log(payload);
+            return Object.assign({}, state, {
+                errors: payload.errors
             });
         }
         case actions.ActionTypes.SET_RETURN_URL: {

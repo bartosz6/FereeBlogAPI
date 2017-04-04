@@ -29,6 +29,7 @@ import { LoginPanelComponent } from './components/childs/user/login/login-panel/
 
 //effects
 import { PostsEffects } from './components/containers/posts/effects/posts.effects';
+import { UserEffects } from './components/containers/user/effects/user.effects';
 
 //common
 import { AppConsts } from './app.consts';
@@ -38,6 +39,8 @@ import { PostsService } from './infrastructure/services/PostsService';
 import { DummyPostsService } from './infrastructure/services/DummyPostsService';
 import { IPostsService } from './infrastructure/services/IPostsService';
 import { AuthGuard } from './infrastructure/auth/auth.guard';
+import { IAuthService } from './infrastructure/services/IAuthService';
+import { AuthService } from './infrastructure/services/AuthService';
 
 const appRoutes: Routes = [
   { path: 'blog/:tag', component: PostListContainer },
@@ -68,13 +71,15 @@ const appRoutes: Routes = [
       maxAge: 50
     }),
     EffectsModule.run(PostsEffects),
+    EffectsModule.run(UserEffects),
     ReactiveFormsModule
   ],
   providers: [
     { provide: AuthGuard, useClass: AuthGuard },
     { provide: AuthHttp, useClass: AuthHttp },
     { provide: AppConsts, useClass: AppConsts },
-    { provide: IPostsService, useClass: DummyPostsService }
+    { provide: IPostsService, useClass: DummyPostsService },
+    { provide: IAuthService, useClass: AuthService }
 
   ],
   bootstrap: [AppComponent]
